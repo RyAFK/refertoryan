@@ -2348,7 +2348,7 @@ function BottomNav({ screen, onHome, onInsights, onReferrals, onEducation, onRef
       className="fixed inset-x-0 bottom-0 z-40"
       style={{ background: `${COLOR.bg}F5`, backdropFilter: 'blur(10px)', borderTop: `1px solid ${COLOR.border}`, paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
     >
-      <div className="mx-auto flex max-w-5xl items-end justify-around px-4 pb-2 pt-2">
+      <div className="mx-auto flex max-w-5xl items-center justify-around px-4 pb-2 pt-2">
         <button
           onClick={onHome}
           className="ecl-btn flex flex-col items-center gap-1 rounded-lg px-3 py-1.5"
@@ -2368,24 +2368,6 @@ function BottomNav({ screen, onHome, onInsights, onReferrals, onEducation, onRef
         </button>
 
         <button
-          onClick={onReferrals}
-          className="ecl-btn flex flex-col items-center gap-1 rounded-lg px-3 py-1.5"
-          style={{ color: screen === 'referrals' ? COLOR.text : COLOR.textMuted }}
-        >
-          <ListChecks size={20} strokeWidth={screen === 'referrals' ? 2.4 : 1.8} />
-          <span className="text-[11px] font-medium">My Referrals</span>
-        </button>
-
-        <button
-          onClick={onEducation}
-          className="ecl-btn flex flex-col items-center gap-1 rounded-lg px-3 py-1.5"
-          style={{ color: screen === 'clinical-education' ? COLOR.text : COLOR.textMuted }}
-        >
-          <GraduationCap size={20} strokeWidth={screen === 'clinical-education' ? 2.4 : 1.8} />
-          <span className="text-[11px] font-medium">Education</span>
-        </button>
-
-        <button
           onClick={onRefer}
           className="ecl-btn ecl-press -mt-6 flex flex-col items-center gap-1"
         >
@@ -2396,6 +2378,24 @@ function BottomNav({ screen, onHome, onInsights, onReferrals, onEducation, onRef
             <UserPlus size={22} />
           </span>
           <span className="whitespace-nowrap text-[10px] font-medium" style={{ color: screen === 'refer' ? COLOR.text : COLOR.textMuted }}>Refer a Patient</span>
+        </button>
+
+        <button
+          onClick={onReferrals}
+          className="ecl-btn flex flex-col items-center gap-1 rounded-lg px-3 py-1.5"
+          style={{ color: screen === 'referrals' ? COLOR.text : COLOR.textMuted }}
+        >
+          <ListChecks size={20} strokeWidth={screen === 'referrals' ? 2.4 : 1.8} />
+          <span className="text-[11px] font-medium">Referrals</span>
+        </button>
+
+        <button
+          onClick={onEducation}
+          className="ecl-btn flex flex-col items-center gap-1 rounded-lg px-3 py-1.5"
+          style={{ color: screen === 'clinical-education' ? COLOR.text : COLOR.textMuted }}
+        >
+          <GraduationCap size={20} strokeWidth={screen === 'clinical-education' ? 2.4 : 1.8} />
+          <span className="text-[11px] font-medium">Education</span>
         </button>
       </div>
     </nav>
