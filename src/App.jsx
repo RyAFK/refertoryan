@@ -2348,10 +2348,10 @@ function BottomNav({ screen, onHome, onInsights, onReferrals, onEducation, onRef
       className="fixed inset-x-0 bottom-0 z-40"
       style={{ background: `${COLOR.bg}F5`, backdropFilter: 'blur(10px)', borderTop: `1px solid ${COLOR.border}`, paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
     >
-      <div className="mx-auto flex max-w-5xl items-center justify-around px-4 pb-2 pt-2">
+      <div className="mx-auto flex max-w-5xl items-end px-4 pb-2 pt-2">
         <button
           onClick={onHome}
-          className="ecl-btn flex flex-col items-center gap-1 rounded-lg px-3 py-1.5"
+          className="ecl-btn flex flex-1 flex-col items-center gap-1 rounded-lg py-1.5"
           style={{ color: screen === 'dashboard' ? COLOR.text : COLOR.textMuted }}
         >
           <Home size={20} strokeWidth={screen === 'dashboard' ? 2.4 : 1.8} />
@@ -2360,7 +2360,7 @@ function BottomNav({ screen, onHome, onInsights, onReferrals, onEducation, onRef
 
         <button
           onClick={onInsights}
-          className="ecl-btn flex flex-col items-center gap-1 rounded-lg px-3 py-1.5"
+          className="ecl-btn flex flex-1 flex-col items-center gap-1 rounded-lg py-1.5"
           style={{ color: screen === 'insights' ? COLOR.text : COLOR.textMuted }}
         >
           <TrendingUp size={20} strokeWidth={screen === 'insights' ? 2.4 : 1.8} />
@@ -2369,20 +2369,21 @@ function BottomNav({ screen, onHome, onInsights, onReferrals, onEducation, onRef
 
         <button
           onClick={onRefer}
-          className="ecl-btn ecl-press -mt-6 flex flex-col items-center gap-1"
+          className="ecl-btn ecl-press relative flex flex-1 flex-col items-center gap-1 py-1.5"
         >
+          <span aria-hidden className="block h-5 w-5" />
           <span
-            className="flex h-14 w-14 items-center justify-center rounded-full shadow-lg"
+            className="absolute -top-6 left-1/2 flex h-14 w-14 -translate-x-1/2 items-center justify-center rounded-full shadow-lg"
             style={{ background: COLOR.accent, color: COLOR.primary, border: `4px solid ${COLOR.bg}` }}
           >
             <UserPlus size={22} />
           </span>
-          <span className="whitespace-nowrap text-[10px] font-medium" style={{ color: screen === 'refer' ? COLOR.text : COLOR.textMuted }}>Refer a Patient</span>
+          <span className="whitespace-nowrap text-[11px] font-medium" style={{ color: screen === 'refer' ? COLOR.text : COLOR.textMuted }}>Refer a Patient</span>
         </button>
 
         <button
           onClick={onReferrals}
-          className="ecl-btn flex flex-col items-center gap-1 rounded-lg px-3 py-1.5"
+          className="ecl-btn flex flex-1 flex-col items-center gap-1 rounded-lg py-1.5"
           style={{ color: screen === 'referrals' ? COLOR.text : COLOR.textMuted }}
         >
           <ListChecks size={20} strokeWidth={screen === 'referrals' ? 2.4 : 1.8} />
@@ -2391,7 +2392,7 @@ function BottomNav({ screen, onHome, onInsights, onReferrals, onEducation, onRef
 
         <button
           onClick={onEducation}
-          className="ecl-btn flex flex-col items-center gap-1 rounded-lg px-3 py-1.5"
+          className="ecl-btn flex flex-1 flex-col items-center gap-1 rounded-lg py-1.5"
           style={{ color: screen === 'clinical-education' ? COLOR.text : COLOR.textMuted }}
         >
           <GraduationCap size={20} strokeWidth={screen === 'clinical-education' ? 2.4 : 1.8} />
