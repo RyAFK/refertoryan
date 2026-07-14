@@ -196,7 +196,7 @@ export default function ClinicalEducationDashboard({
           <GraduationCap size={22} strokeWidth={1.75} />
         </span>
         <div>
-          <h1 className="text-3xl sm:text-4xl" style={FONT_DISPLAY}>Clinical Education</h1>
+          <h1 className="text-3xl sm:text-4xl" style={{ ...FONT_DISPLAY, color: COLOR.text }}>Clinical Education</h1>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed sm:text-[15px]" style={{ color: COLOR.textMuted }}>
             Practical, bite-sized clinical education to help you identify suitable patients, understand treatment pathways and make confident referrals.
           </p>
