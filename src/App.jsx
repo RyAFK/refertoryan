@@ -15,6 +15,7 @@ import {
 } from 'recharts';
 import { DAY_COLORS, NIGHT_COLORS, ColorContext, useColors, FONT_DISPLAY, FONT_BODY, FONT_MONO } from './theme';
 import ReferralAssistant from './referral-assistant/ReferralAssistant';
+import ClinicalEducation from './clinical-education/ClinicalEducation';
 
 const GLOBAL_STYLES = `
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Parisienne&display=swap');
@@ -2340,7 +2341,7 @@ function AdminConsole({ onExit, referrals, onStatusChange, theme, onToggleTheme 
 
 // ---------- bottom navigation bar (partner side) ----------
 
-function BottomNav({ screen, onHome, onInsights, onReferrals, onRefer }) {
+function BottomNav({ screen, onHome, onInsights, onReferrals, onEducation, onRefer }) {
   const COLOR = useColors();
   return (
     <nav
@@ -2376,6 +2377,15 @@ function BottomNav({ screen, onHome, onInsights, onReferrals, onRefer }) {
         </button>
 
         <button
+          onClick={onEducation}
+          className="ecl-btn flex flex-col items-center gap-1 rounded-lg px-3 py-1.5"
+          style={{ color: screen === 'clinical-education' ? COLOR.text : COLOR.textMuted }}
+        >
+          <GraduationCap size={20} strokeWidth={screen === 'clinical-education' ? 2.4 : 1.8} />
+          <span className="text-[11px] font-medium">Education</span>
+        </button>
+
+        <button
           onClick={onRefer}
           className="ecl-btn ecl-press -mt-6 flex flex-col items-center gap-1"
         >
@@ -2402,9 +2412,11 @@ const NAV_ITEMS = [
   { label: 'Notifications', icon: Bell },
 ];
 
+const NAV_SCREEN_MAP = { Home: 'dashboard', Education: 'clinical-education' };
+
 function AppShell({ theme, onToggleTheme }) {
   const COLOR = useColors();
-  const [screen, setScreen] = useState('login'); // login | dashboard | refer | insights | referrals | admin | referral-assistant
+  const [screen, setScreen] = useState('login'); // login | dashboard | refer | insights | referrals | admin | referral-assistant | clinical-education
   const [menuOpen, setMenuOpen] = useState(false);
   const [referrals, setReferrals] = useState(ADMIN_REFERRALS_SEED);
 
@@ -2441,16 +2453,20 @@ function AppShell({ theme, onToggleTheme }) {
                 <div className="flex items-center gap-6">
                   <EclWordmark tone={theme === 'night' ? 'white' : 'dark'} size="sm" />
                   <nav className="hidden items-center gap-1 lg:flex">
-                    {NAV_ITEMS.map(({ label, icon: Icon }) => (
-                      <button
-                        key={label}
-                        onClick={() => setScreen(label === 'Home' ? 'dashboard' : screen)}
-                        className="ecl-btn flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-200"
-                        style={(label === 'Home' && screen === 'dashboard') ? { background: COLOR.primaryTint, color: COLOR.text } : { color: COLOR.textMuted }}
-                      >
-                        <Icon size={16} /> {label}
-                      </button>
-                    ))}
+                    {NAV_ITEMS.map(({ label, icon: Icon }) => {
+                      const target = NAV_SCREEN_MAP[label];
+                      const active = target && screen === target;
+                      return (
+                        <button
+                          key={label}
+                          onClick={() => target && setScreen(target)}
+                          className="ecl-btn flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-200"
+                          style={active ? { background: COLOR.primaryTint, color: COLOR.text } : { color: COLOR.textMuted }}
+                        >
+                          <Icon size={16} /> {label}
+                        </button>
+                      );
+                    })}
                   </nav>
                 </div>
                 <div className="flex items-center gap-3">
@@ -2489,6 +2505,12 @@ function AppShell({ theme, onToggleTheme }) {
               )}
               {screen === 'insights' && <InsightsPage />}
               {screen === 'referrals' && <ReferralsPage referrals={referrals} />}
+              {screen === 'clinical-education' && (
+                <ClinicalEducation
+                  onReferPatient={() => setScreen('refer')}
+                  onStartReferralAssistant={() => setScreen('referral-assistant')}
+                />
+              )}
             </div>
             {screen === 'refer' && <ReferWizard onExit={() => setScreen('dashboard')} onSubmitReferral={addReferral} />}
             {screen === 'referral-assistant' && (
@@ -2512,6 +2534,7 @@ function AppShell({ theme, onToggleTheme }) {
               onHome={() => { setScreen('dashboard'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
               onInsights={() => { setScreen('insights'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
               onReferrals={() => { setScreen('referrals'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              onEducation={() => { setScreen('clinical-education'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
               onRefer={() => setScreen('refer')}
             />
           </div>
