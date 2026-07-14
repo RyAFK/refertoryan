@@ -2422,7 +2422,6 @@ function AppShell({ theme, onToggleTheme }) {
   return (
     <div style={{ ...FONT_BODY, minHeight: '100vh', position: 'relative', background: COLOR.recessed }}>
       <div className="relative z-10">
-        {screen === 'login' && <ThemeToggle theme={theme} onToggle={onToggleTheme} />}
         {screen === 'login' && <LoginScreen onSignIn={() => setScreen('dashboard')} onStaffSignIn={() => setScreen('admin')} />}
 
         {screen === 'admin' && (
