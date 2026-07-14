@@ -1315,7 +1315,7 @@ function TreatmentPieChart({ visible, donutColors }) {
   );
 }
 
-function InsightsPage({ onBack }) {
+function InsightsPage() {
   const COLOR = useColors();
   const donutColors = [COLOR.accent, COLOR.secondary, COLOR.complete, '#7C9CB8', COLOR.future];
   const gridStroke = COLOR.border;
@@ -1323,10 +1323,6 @@ function InsightsPage({ onBack }) {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
-      <button onClick={onBack} className="ecl-underline mb-4 flex items-center gap-1.5 text-sm font-medium" style={{ color: COLOR.textMuted }}>
-        <ArrowLeft size={15} /> Back to dashboard
-      </button>
-
       <div className="ecl-fade-up relative overflow-hidden rounded-2xl" style={{ background: COLOR.primary }}>
         <LensRings className="ecl-breathe pointer-events-none absolute -right-8 -top-10 opacity-40" size={200} />
         <div className="relative px-6 py-7 sm:px-8 sm:py-8">
@@ -1486,17 +1482,13 @@ function Dashboard({ onRefer, referrals }) {
 
 // ---------- referrals page (partner side) ----------
 
-function ReferralsPage({ onBack, referrals }) {
+function ReferralsPage({ referrals }) {
   const COLOR = useColors();
   const [activeStat, setActiveStat] = useState(null);
   const mine = (referrals || []).filter((r) => r.practice === 'Keith Holland Opticians');
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
       <StatDetailModal stat={activeStat} onClose={() => setActiveStat(null)} />
-
-      <button onClick={onBack} className="ecl-underline mb-4 flex items-center gap-1.5 text-sm font-medium" style={{ color: COLOR.textMuted }}>
-        <ArrowLeft size={15} /> Back to dashboard
-      </button>
 
       <div className="ecl-fade-up relative overflow-hidden rounded-2xl" style={{ background: COLOR.primary }}>
         <LensRings className="ecl-breathe pointer-events-none absolute -right-8 -top-10 opacity-40" size={200} />
@@ -1589,7 +1581,7 @@ function LoginScreen({ onSignIn, onStaffSignIn }) {
 
   if (mode === 'role') {
     return (
-      <div className="ecl-fade-in flex min-h-[640px] flex-col items-center justify-center px-6 py-14" style={{ background: COLOR.primary }}>
+      <div className="ecl-fade-in flex min-h-screen flex-col items-center justify-center px-6 py-14" style={{ background: COLOR.primary }}>
         <BrandMark size={54} />
         <p className="mt-5 text-sm" style={{ color: 'rgba(255,255,255,0.65)' }}>Referral management</p>
 
@@ -1628,7 +1620,7 @@ function LoginScreen({ onSignIn, onStaffSignIn }) {
 
   if (mode === 'staffcode') {
     return (
-      <div className="ecl-fade-in flex min-h-[640px] flex-col items-center justify-center px-6 py-14 text-center" style={{ background: COLOR.primary }}>
+      <div className="ecl-fade-in flex min-h-screen flex-col items-center justify-center px-6 py-14 text-center" style={{ background: COLOR.primary }}>
         <BrandMark size={44} />
         <h1 className="mt-6 text-2xl text-white" style={FONT_DISPLAY}>Clinic team access</h1>
         <p className="mt-2 max-w-xs text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
@@ -1669,7 +1661,7 @@ function LoginScreen({ onSignIn, onStaffSignIn }) {
 
   if (mode === 'signin') {
     return (
-      <div className="ecl-fade-in flex min-h-[640px] flex-col items-center justify-center px-6 py-14" style={{ background: COLOR.primary }}>
+      <div className="ecl-fade-in flex min-h-screen flex-col items-center justify-center px-6 py-14" style={{ background: COLOR.primary }}>
         <BrandMark size={44} />
         <h1 className="mt-6 text-2xl text-white" style={FONT_DISPLAY}>Partner sign-in</h1>
         <p className="mt-2 max-w-xs text-center text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
@@ -1712,7 +1704,7 @@ function LoginScreen({ onSignIn, onStaffSignIn }) {
   }
 
   return (
-    <div className="ecl-fade-in flex min-h-[640px] flex-col items-center justify-center px-6 py-14 text-center" style={{ background: COLOR.primary }}>
+    <div className="ecl-fade-in flex min-h-screen flex-col items-center justify-center px-6 py-14 text-center" style={{ background: COLOR.primary }}>
       <BrandMark size={44} />
       <div className="ecl-pop mt-6 flex h-14 w-14 items-center justify-center rounded-full" style={{ background: 'rgba(176,138,78,0.18)' }}>
         <Mail size={24} style={{ color: COLOR.accent }} />
@@ -2490,8 +2482,8 @@ function AppShell({ theme, onToggleTheme }) {
 
             <div key={screen === 'refer' ? 'other' : screen} className="ecl-fade-in">
               {screen === 'dashboard' && <Dashboard onRefer={() => setScreen('refer')} referrals={referrals} />}
-              {screen === 'insights' && <InsightsPage onBack={() => setScreen('dashboard')} />}
-              {screen === 'referrals' && <ReferralsPage onBack={() => setScreen('dashboard')} referrals={referrals} />}
+              {screen === 'insights' && <InsightsPage />}
+              {screen === 'referrals' && <ReferralsPage referrals={referrals} />}
             </div>
             {screen === 'refer' && <ReferWizard onExit={() => setScreen('dashboard')} onSubmitReferral={addReferral} />}
 
