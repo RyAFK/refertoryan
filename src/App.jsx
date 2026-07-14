@@ -1412,7 +1412,7 @@ function ReferralAssistantCard({ onStart }) {
               <Pill tone="accent">New</Pill>
             </div>
             <p className="mt-1.5 max-w-md text-sm leading-relaxed" style={{ color: COLOR.textMuted }}>
-              Not sure where a patient may fit? Answer a few simple questions and explore which ECL pathway could be
+              Not sure which treatment may be suitable for your patient? Answer a few simple questions to explore which ECL pathway could be
               relevant to discuss.
             </p>
           </div>
