@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, createContext, useContext } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Home, ListChecks, GraduationCap, Megaphone, Bell, User, ChevronDown, Building2,
   ArrowLeft, ArrowRight, CheckCircle2, Upload, FileText, X, Eye, Sparkles, ScanEye,
@@ -6,12 +6,15 @@ import {
   Calendar, Newspaper, MapPin, Phone, ArrowUpRight, Award, ShieldCheck, Users2,
   TrendingUp, PoundSterling, Percent, PieChart as PieChartIcon,
   Star, ChevronLeft, ChevronRight, Quote, BadgeCheck, Play, Instagram, Lightbulb, Hourglass,
-  UserPlus, Search, ClipboardList, Crown, LogOut, Sun, Moon, Filter, UserX, Activity, Sparkle
+  UserPlus, Search, ClipboardList, Crown, LogOut, Sun, Moon, Filter, UserX, Activity, Sparkle,
+  Compass,
 } from 'lucide-react';
 import {
   ResponsiveContainer, LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, PieChart, Pie, Cell,
 } from 'recharts';
+import { DAY_COLORS, NIGHT_COLORS, ColorContext, useColors, FONT_DISPLAY, FONT_BODY, FONT_MONO } from './theme';
+import ReferralAssistant from './referral-assistant/ReferralAssistant';
 
 const GLOBAL_STYLES = `
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Parisienne&display=swap');
@@ -55,46 +58,6 @@ const GLOBAL_STYLES = `
 .ecl-underline:hover::after { right: 0; }
 * { transition: background-color 240ms ease, border-color 240ms ease, color 240ms ease; }
 `;
-
-// ---------- theming (day / night) ----------
-
-const DAY_COLORS = {
-  bg: '#FFFFFF',
-  recessed: '#F4F5F7',
-  primary: '#0B2545',
-  primaryTint: '#E8EDF3',
-  secondary: '#1D4E75',
-  accent: '#B08A4E',
-  accentTint: '#F6EFE2',
-  text: '#101820',
-  textMuted: '#5C6672',
-  border: '#E3E6EA',
-  complete: '#2F7D5A',
-  action: '#B4780E',
-  problem: '#B3261E',
-  future: '#B7BFC7',
-};
-
-const NIGHT_COLORS = {
-  ...DAY_COLORS,
-  bg: '#16233C',
-  recessed: '#0A1424',
-  primaryTint: 'rgba(29,78,117,0.35)',
-  accentTint: 'rgba(176,138,78,0.22)',
-  text: '#EDF1F5',
-  textMuted: '#9FB0BE',
-  border: 'rgba(255,255,255,0.14)',
-  future: '#48525E',
-};
-
-const ColorContext = createContext(DAY_COLORS);
-function useColors() {
-  return useContext(ColorContext);
-}
-
-const FONT_DISPLAY = { fontFamily: "'Fraunces', ui-serif, Georgia, serif" };
-const FONT_BODY = { fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif" };
-const FONT_MONO = { fontFamily: "'IBM Plex Mono', ui-monospace, monospace" };
 
 function ThemeToggle({ theme, onToggle, inline = false }) {
   const COLOR = useColors();
@@ -1431,7 +1394,42 @@ function InsightsPage() {
 
 // ---------- dashboard ----------
 
-function Dashboard({ onRefer, referrals }) {
+function ReferralAssistantCard({ onStart }) {
+  const COLOR = useColors();
+  return (
+    <div
+      className="ecl-fade-up ecl-lift mt-6 rounded-2xl p-6 sm:p-7"
+      style={{ animationDelay: '40ms', background: COLOR.bg, border: `1px solid ${COLOR.border}` }}
+    >
+      <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-start gap-4">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full" style={{ background: COLOR.primaryTint, color: COLOR.primary }}>
+            <Compass size={22} strokeWidth={1.75} />
+          </span>
+          <div>
+            <div className="flex flex-wrap items-center gap-2">
+              <h2 className="text-xl" style={{ ...FONT_DISPLAY, color: COLOR.text }}>ECL Referral Assistant</h2>
+              <Pill tone="accent">New</Pill>
+            </div>
+            <p className="mt-1.5 max-w-md text-sm leading-relaxed" style={{ color: COLOR.textMuted }}>
+              Not sure where a patient may fit? Answer a few simple questions and explore which ECL pathway could be
+              relevant to discuss.
+            </p>
+          </div>
+        </div>
+        <button
+          onClick={onStart}
+          className="ecl-btn ecl-press flex shrink-0 items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium text-white sm:w-auto"
+          style={{ background: COLOR.primary }}
+        >
+          Start Referral Assistant <ArrowRight size={16} />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function Dashboard({ onRefer, onStartReferralAssistant, referrals }) {
   const COLOR = useColors();
   const [showOffer, setShowOffer] = useState(false);
 
@@ -1470,6 +1468,8 @@ function Dashboard({ onRefer, referrals }) {
           </div>
         </div>
       </div>
+
+      <ReferralAssistantCard onStart={onStartReferralAssistant} />
 
       <CpdNewsSection />
       <TrustpilotCarousel />
@@ -2404,7 +2404,7 @@ const NAV_ITEMS = [
 
 function AppShell({ theme, onToggleTheme }) {
   const COLOR = useColors();
-  const [screen, setScreen] = useState('login'); // login | dashboard | refer | insights | referrals | admin
+  const [screen, setScreen] = useState('login'); // login | dashboard | refer | insights | referrals | admin | referral-assistant
   const [menuOpen, setMenuOpen] = useState(false);
   const [referrals, setReferrals] = useState(ADMIN_REFERRALS_SEED);
 
@@ -2480,12 +2480,21 @@ function AppShell({ theme, onToggleTheme }) {
               </div>
             </header>
 
-            <div key={screen === 'refer' ? 'other' : screen} className="ecl-fade-in">
-              {screen === 'dashboard' && <Dashboard onRefer={() => setScreen('refer')} referrals={referrals} />}
+            <div key={screen === 'refer' || screen === 'referral-assistant' ? 'other' : screen} className="ecl-fade-in">
+              {screen === 'dashboard' && (
+                <Dashboard
+                  onRefer={() => setScreen('refer')}
+                  onStartReferralAssistant={() => setScreen('referral-assistant')}
+                  referrals={referrals}
+                />
+              )}
               {screen === 'insights' && <InsightsPage />}
               {screen === 'referrals' && <ReferralsPage referrals={referrals} />}
             </div>
             {screen === 'refer' && <ReferWizard onExit={() => setScreen('dashboard')} onSubmitReferral={addReferral} />}
+            {screen === 'referral-assistant' && (
+              <ReferralAssistant onExit={() => setScreen('dashboard')} onReferPatient={() => setScreen('refer')} />
+            )}
 
             <footer className="mx-auto max-w-5xl px-4 pb-4 pt-8" style={{ paddingBottom: '6rem' }}>
               <div className="flex flex-col items-center gap-2 border-t pt-6 text-center" style={{ borderColor: COLOR.border }}>
