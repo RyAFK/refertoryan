@@ -277,7 +277,7 @@ export function BookRyanModal({ open, onClose }) {
             <button
               onClick={() => setShowCallbackForm(true)}
               className="ecl-underline text-sm font-medium"
-              style={{ color: COLOR.secondary }}
+              style={{ color: COLOR.inkSecondary }}
             >
               Or request a callback
             </button>

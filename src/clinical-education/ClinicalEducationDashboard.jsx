@@ -86,7 +86,7 @@ function LearningProgressCard({ completedCount, percent }) {
           </p>
         </div>
         <div className="flex shrink-0 flex-col items-center gap-2 sm:items-end">
-          <span className="text-3xl font-medium" style={{ ...FONT_DISPLAY, color: COLOR.primary }}>{percent}%</span>
+          <span className="text-3xl font-medium" style={{ ...FONT_DISPLAY, color: COLOR.ink }}>{percent}%</span>
           <div className="h-2 w-40 overflow-hidden rounded-full" style={{ background: COLOR.recessed }}>
             <div style={{ width: `${percent}%`, height: '100%', background: COLOR.accent, borderRadius: 999, transition: 'width 500ms cubic-bezier(0.16,1,0.3,1)' }} />
           </div>
@@ -113,7 +113,7 @@ function RecommendedForYou({ progressMap, onOpenModule }) {
         <TrendingUp size={13} /> Recommended for you
       </p>
       <div className="mt-2 flex items-center gap-3.5">
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ background: COLOR.bg, color: COLOR.primary }}>
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ background: COLOR.bg, color: COLOR.ink }}>
           <ModuleIcon name={module.icon} size={20} strokeWidth={1.75} />
         </span>
         <div className="min-w-0">
@@ -141,7 +141,7 @@ function ModuleCard({ module, progress, saved, onOpen, onToggleSave, delay }) {
       style={{ animationDelay: `${delay}ms`, background: COLOR.bg, border: `1px solid ${COLOR.border}` }}
     >
       <div className="flex items-start justify-between gap-2">
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ background: COLOR.primaryTint, color: COLOR.primary }}>
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ background: COLOR.primaryTint, color: COLOR.ink }}>
           <ModuleIcon name={module.icon} size={20} strokeWidth={1.75} />
         </span>
         <button
@@ -192,7 +192,7 @@ export default function ClinicalEducationDashboard({
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
       <div className="ecl-fade-up flex items-start gap-3">
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ background: COLOR.primaryTint, color: COLOR.primary }}>
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ background: COLOR.primaryTint, color: COLOR.ink }}>
           <GraduationCap size={22} strokeWidth={1.75} />
         </span>
         <div>

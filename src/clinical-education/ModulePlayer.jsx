@@ -28,7 +28,7 @@ function ConversionRow({ onDiscuss, onRefer, onBookRyan, discussLabel = 'Discuss
         <button
           onClick={onDiscuss}
           className="ecl-btn ecl-press flex flex-1 items-center justify-center gap-2 rounded-lg px-5 py-3 text-sm font-medium"
-          style={onDark ? { background: 'rgba(255,255,255,0.14)', border: '1px solid rgba(255,255,255,0.35)', color: '#fff' } : { background: COLOR.primaryTint, color: COLOR.primary }}
+          style={onDark ? { background: 'rgba(255,255,255,0.14)', border: '1px solid rgba(255,255,255,0.35)', color: '#fff' } : { background: COLOR.primaryTint, color: COLOR.ink }}
         >
           <MessageCircle size={15} /> {discussLabel}
         </button>
@@ -44,7 +44,7 @@ function ConversionRow({ onDiscuss, onRefer, onBookRyan, discussLabel = 'Discuss
         <button
           onClick={onBookRyan}
           className="ecl-underline mt-3 flex items-center gap-1.5 text-xs font-medium"
-          style={{ color: onDark ? 'rgba(255,255,255,0.75)' : COLOR.secondary }}
+          style={{ color: onDark ? 'rgba(255,255,255,0.75)' : COLOR.inkSecondary }}
         >
           <Phone size={11} /> Prefer to talk it through? Book a conversation with Ryan
         </button>
@@ -70,7 +70,7 @@ function QuickNote({ onSave, tone }) {
 
   if (!open) {
     return (
-      <button onClick={() => setOpen(true)} className="ecl-underline mt-3 text-xs font-medium" style={{ color: onDark ? 'rgba(255,255,255,0.85)' : COLOR.secondary }}>
+      <button onClick={() => setOpen(true)} className="ecl-underline mt-3 text-xs font-medium" style={{ color: onDark ? 'rgba(255,255,255,0.85)' : COLOR.inkSecondary }}>
         + Save a note about this patient
       </button>
     );
@@ -104,7 +104,7 @@ function OpeningStep({ module }) {
   return (
     <div className="mx-auto max-w-2xl px-5 py-10 text-center sm:py-14">
       <span className="ecl-pop flex h-16 w-16 items-center justify-center rounded-full" style={{ background: COLOR.primaryTint }}>
-        <ModuleIcon name={module.icon} size={28} style={{ color: COLOR.primary }} strokeWidth={1.75} />
+        <ModuleIcon name={module.icon} size={28} style={{ color: COLOR.ink }} strokeWidth={1.75} />
       </span>
       <h1 className="ecl-fade-up mt-5 text-2xl sm:text-3xl" style={{ ...FONT_DISPLAY, color: COLOR.text, animationDelay: '80ms' }}>
         {module.opening.question}
@@ -223,7 +223,7 @@ function CaseStudyStep({ module, onDiscuss, onRefer, onBookRyan, onSaveNote }) {
               onClick={() => setChoice(i)}
               className="ecl-lift ecl-press flex w-full items-start gap-3 rounded-xl p-4 text-left"
               style={{
-                border: `1px solid ${isSelected ? COLOR.primary : COLOR.border}`,
+                border: `1px solid ${isSelected ? COLOR.ink : COLOR.border}`,
                 background: isSelected ? COLOR.primaryTint : COLOR.bg,
               }}
             >
@@ -318,7 +318,7 @@ function WouldYouReferStep({ module, onAdvance }) {
               onClick={() => setChoice(c.key)}
               className="ecl-lift ecl-press rounded-xl px-4 py-3 text-sm font-medium"
               style={{
-                border: `1px solid ${selected ? COLOR.primary : COLOR.border}`,
+                border: `1px solid ${selected ? COLOR.ink : COLOR.border}`,
                 background: selected ? COLOR.primaryTint : COLOR.bg,
                 color: COLOR.text,
               }}
@@ -378,7 +378,7 @@ function QuizStep({ module, onFinish }) {
           let bg = COLOR.bg;
           if (showState && isRight) { borderColor = COLOR.complete; bg = '#2F7D5A1A'; }
           else if (showState && isSelected && !isRight) { borderColor = COLOR.problem; bg = '#B3261E0D'; }
-          else if (isSelected) { borderColor = COLOR.primary; bg = COLOR.primaryTint; }
+          else if (isSelected) { borderColor = COLOR.ink; bg = COLOR.primaryTint; }
           return (
             <button
               key={i}

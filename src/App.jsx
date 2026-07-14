@@ -162,15 +162,16 @@ const CLINIC_NEWS = [
 
 function Pill({ children, tone = 'default' }) {
   const COLOR = useColors();
+  const night = COLOR.mode === 'night';
   const tones = {
     default: { bg: COLOR.recessed, color: COLOR.textMuted },
     complete: { bg: '#2F7D5A1A', color: COLOR.complete },
     action: { bg: '#B4780E1A', color: COLOR.action },
     accent: { bg: COLOR.accentTint, color: COLOR.accent },
-    info: { bg: '#1D4E751A', color: '#1D4E75' },
-    purple: { bg: '#6D4AA31A', color: '#6D4AA3' },
-    teal: { bg: '#0F766E1A', color: '#0F766E' },
-    closed: { bg: '#78716C1A', color: '#78716C' },
+    info: { bg: '#1D4E751A', color: night ? '#8FB6DD' : '#1D4E75' },
+    purple: { bg: '#6D4AA31A', color: night ? '#C7AEEA' : '#6D4AA3' },
+    teal: { bg: '#0F766E1A', color: night ? '#6FD3C7' : '#0F766E' },
+    closed: { bg: '#78716C1A', color: night ? '#B7BFC7' : '#78716C' },
   };
   const t = tones[tone] || tones.default;
   return (
@@ -219,12 +220,13 @@ function TextArea(props) {
 }
 
 function statToneColor(tone, C) {
+  const night = C.mode === 'night';
   if (tone === 'complete') return C.complete;
   if (tone === 'action') return C.action;
-  if (tone === 'info') return '#1D4E75';
-  if (tone === 'purple') return '#6D4AA3';
-  if (tone === 'teal') return '#0F766E';
-  if (tone === 'closed') return '#78716C';
+  if (tone === 'info') return night ? '#8FB6DD' : '#1D4E75';
+  if (tone === 'purple') return night ? '#C7AEEA' : '#6D4AA3';
+  if (tone === 'teal') return night ? '#6FD3C7' : '#0F766E';
+  if (tone === 'closed') return night ? '#B7BFC7' : '#78716C';
   return C.text;
 }
 function statToneBg(tone, C) {
@@ -244,8 +246,9 @@ function EyeMotif({ size = 220, tone }) {
   const strokeTone = tone || COLOR.accent;
   return (
     <svg width={size} height={size} viewBox="0 0 200 200" fill="none">
-      <circle cx="100" cy="100" r="98" fill={COLOR.primaryTint} />
-      <path d="M20 100c26-42 60-62 80-62s54 20 80 62c-26 42-60 62-80 62s-54-20-80-62Z" fill={COLOR.bg} stroke={COLOR.primary} strokeOpacity="0.15" strokeWidth="1.5" />
+      {/* Sits on a permanently dark-navy hero backdrop in both themes, so these accent shapes stay light-on-dark rather than following the day/night flip. */}
+      <circle cx="100" cy="100" r="98" fill="rgba(255,255,255,0.14)" />
+      <path d="M20 100c26-42 60-62 80-62s54 20 80 62c-26 42-60 62-80 62s-54-20-80-62Z" fill="#F4F5F7" stroke={COLOR.primary} strokeOpacity="0.15" strokeWidth="1.5" />
       <circle cx="100" cy="100" r="38" fill={COLOR.primary} />
       <circle cx="100" cy="100" r="38" fill="url(#irisGrad)" opacity="0.9" />
       <circle cx="100" cy="100" r="17" fill="#0A1420" />
@@ -329,7 +332,7 @@ function TrustpilotCarousel() {
         <button
           onClick={() => window.open(TRUSTPILOT_URL, '_blank', 'noopener,noreferrer')}
           className="ecl-underline flex items-center gap-1 text-[11px] font-medium"
-          style={{ color: COLOR.secondary }}
+          style={{ color: COLOR.inkSecondary }}
         >
           Read all reviews <ArrowUpRight size={11} />
         </button>
@@ -372,7 +375,7 @@ function TrustpilotCarousel() {
               key={i}
               onClick={() => { setDir(i > index ? 1 : -1); setEntered(false); setIndex(i); }}
               className="h-1.5 rounded-full transition-all duration-300"
-              style={{ width: i === index ? 18 : 6, background: i === index ? COLOR.primary : COLOR.border }}
+              style={{ width: i === index ? 18 : 6, background: i === index ? COLOR.ink : COLOR.border }}
             />
           ))}
         </div>
@@ -424,7 +427,7 @@ function CpdNewsSection() {
                   </div>
                   <div className="flex shrink-0 flex-col items-end gap-1.5">
                     <Pill tone="accent">{e.points}</Pill>
-                    <span className="flex items-center gap-1 text-xs font-medium" style={{ color: COLOR.secondary }}>
+                    <span className="flex items-center gap-1 text-xs font-medium" style={{ color: COLOR.inkSecondary }}>
                       Get tickets <ArrowUpRight size={12} />
                     </span>
                   </div>
@@ -891,13 +894,13 @@ function ReferWizard({ onExit, onSubmitReferral }) {
                     className="ecl-fade-up ecl-lift ecl-press flex items-start gap-3.5 rounded-2xl p-4 text-left transition-all"
                     style={{
                       animationDelay: `${i * 40}ms`,
-                      border: `1px solid ${selected ? COLOR.primary : COLOR.border}`,
+                      border: `1px solid ${selected ? COLOR.ink : COLOR.border}`,
                       background: selected ? COLOR.primaryTint : COLOR.bg,
                     }}
                   >
                     <span
                       className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-colors duration-200"
-                      style={{ background: selected ? COLOR.primary : COLOR.recessed, color: selected ? '#fff' : COLOR.secondary }}
+                      style={{ background: selected ? COLOR.primary : COLOR.recessed, color: selected ? '#fff' : COLOR.inkSecondary }}
                     >
                       <Icon size={20} strokeWidth={1.75} />
                     </span>
@@ -945,7 +948,7 @@ function ReferWizard({ onExit, onSubmitReferral }) {
               className="ecl-lift flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl p-10 text-center"
               style={{ border: `2px dashed ${COLOR.border}` }}
             >
-              <Upload size={28} strokeWidth={1.5} style={{ color: COLOR.secondary }} />
+              <Upload size={28} strokeWidth={1.5} style={{ color: COLOR.inkSecondary }} />
               <span className="font-medium" style={{ color: COLOR.text }}>Click to add files (preview only)</span>
               <span className="text-sm" style={{ color: COLOR.textMuted }}>PDF, JPG, PNG · up to 25MB each</span>
               <input
@@ -960,7 +963,7 @@ function ReferWizard({ onExit, onSubmitReferral }) {
                 {files.map((f, i) => (
                   <li key={i} className="ecl-fade-up flex items-center justify-between gap-3 rounded-lg p-3.5" style={{ border: `1px solid ${COLOR.border}` }}>
                     <div className="flex items-center gap-3 min-w-0">
-                      <FileText size={20} style={{ color: COLOR.secondary }} />
+                      <FileText size={20} style={{ color: COLOR.inkSecondary }} />
                       <span className="truncate text-sm font-medium" style={{ color: COLOR.text }}>{f.name}</span>
                     </div>
                     <button onClick={() => setFiles(files.filter((_, j) => j !== i))} style={{ color: COLOR.textMuted }}>
@@ -1281,7 +1284,7 @@ function TreatmentPieChart({ visible, donutColors }) {
 
 function InsightsPage() {
   const COLOR = useColors();
-  const donutColors = [COLOR.accent, COLOR.secondary, COLOR.complete, '#7C9CB8', COLOR.future];
+  const donutColors = [COLOR.accent, COLOR.inkSecondary, COLOR.complete, '#7C9CB8', COLOR.future];
   const gridStroke = COLOR.border;
   const tickStyle = { fontSize: 12, fill: COLOR.textMuted };
 
@@ -1348,7 +1351,7 @@ function InsightsPage() {
                 <p className="mb-2 text-sm font-medium" style={{ color: COLOR.text }}>Referral volume</p>
                 <div className="rounded-2xl p-3" style={{ background: COLOR.bg, border: `1px solid ${COLOR.border}` }}>
                   <div style={{ height: 150 }}>
-                    {visible && <ReferralVolumeChart visible={visible} gridStroke={gridStroke} tickStyle={tickStyle} color={COLOR.secondary} />}
+                    {visible && <ReferralVolumeChart visible={visible} gridStroke={gridStroke} tickStyle={tickStyle} color={COLOR.inkSecondary} />}
                   </div>
                 </div>
               </>
@@ -1404,7 +1407,7 @@ function ReferralAssistantCard({ onStart }) {
     >
       <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-start gap-4">
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full" style={{ background: COLOR.primaryTint, color: COLOR.primary }}>
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full" style={{ background: COLOR.primaryTint, color: COLOR.ink }}>
             <Compass size={22} strokeWidth={1.75} />
           </span>
           <div>
@@ -1523,7 +1526,7 @@ function ReferralsPage({ referrals }) {
 
       <div className="ecl-fade-up mt-6 rounded-2xl p-5" style={{ animationDelay: '80ms', background: COLOR.bg, border: `1px solid ${COLOR.border}` }}>
         <h2 className="mb-4 flex items-center gap-2 font-medium" style={{ color: COLOR.text }}>
-          <ListChecks size={16} style={{ color: COLOR.secondary }} /> Recent referrals
+          <ListChecks size={16} style={{ color: COLOR.inkSecondary }} /> Recent referrals
         </h2>
         <ul className="space-y-2.5">
           {mine.length === 0 && (
@@ -1825,7 +1828,7 @@ function ReferralsTable({ referrals, onStatusChange }) {
     <div className="ecl-fade-up rounded-2xl p-5" style={{ background: COLOR.bg, border: `1px solid ${COLOR.border}` }}>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="flex items-center gap-2 font-medium" style={{ color: COLOR.text }}>
-          <ClipboardList size={16} style={{ color: COLOR.secondary }} /> All referrals
+          <ClipboardList size={16} style={{ color: COLOR.inkSecondary }} /> All referrals
         </h2>
         <div className="flex flex-col gap-2 sm:flex-row">
           <div className="relative">
@@ -2151,7 +2154,7 @@ function TreatmentDonut({ referrals }) {
     else buckets.Other += 1;
   });
   const data = Object.entries(buckets).map(([name, value]) => ({ name, value })).filter((d) => d.value > 0);
-  const colors = { Cataract: COLOR.primary, 'Dry Eye': COLOR.secondary, ICL: COLOR.accent, LVC: '#7C9CB8', Other: COLOR.future };
+  const colors = { Cataract: COLOR.ink, 'Dry Eye': COLOR.inkSecondary, ICL: COLOR.accent, LVC: '#7C9CB8', Other: COLOR.future };
 
   return (
     <div className="ecl-fade-up mt-6 rounded-2xl p-5" style={{ background: COLOR.bg, border: `1px solid ${COLOR.border}` }}>
