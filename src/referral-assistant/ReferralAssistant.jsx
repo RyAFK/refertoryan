@@ -77,7 +77,7 @@ function AnswerOption({ label, iconName, selected, onClick, delay = 0 }) {
       onClick={onClick}
       className="ecl-fade-up ecl-lift ecl-press flex w-full items-center gap-3.5 rounded-2xl p-4 text-left transition-all sm:p-4.5"
       style={{
-        border: `1px solid ${selected ? COLOR.primary : COLOR.border}`,
+        border: `1px solid ${selected ? COLOR.ink : COLOR.border}`,
         background: selected ? COLOR.primaryTint : COLOR.bg,
         minHeight: 64,
         animationDelay: `${delay}ms`,
@@ -85,12 +85,12 @@ function AnswerOption({ label, iconName, selected, onClick, delay = 0 }) {
     >
       <span
         className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-colors duration-200"
-        style={{ background: selected ? COLOR.primary : COLOR.recessed, color: selected ? '#fff' : COLOR.secondary }}
+        style={{ background: selected ? COLOR.primary : COLOR.recessed, color: selected ? '#fff' : COLOR.inkSecondary }}
       >
         <Icon name={iconName} size={19} strokeWidth={1.75} />
       </span>
       <span className="text-[15px] font-medium leading-snug" style={{ color: COLOR.text }}>{label}</span>
-      {selected && <CheckCircle2 size={18} className="ml-auto shrink-0" style={{ color: COLOR.primary }} />}
+      {selected && <CheckCircle2 size={18} className="ml-auto shrink-0" style={{ color: COLOR.ink }} />}
     </button>
   );
 }
@@ -165,7 +165,7 @@ function StartScreen({ onStart, onReferNow }) {
   return (
     <div className="mx-auto flex max-w-xl flex-col items-center px-5 py-10 text-center sm:py-14">
       <span className="ecl-pop flex h-16 w-16 items-center justify-center rounded-full" style={{ background: COLOR.primaryTint }}>
-        <Compass size={28} style={{ color: COLOR.primary }} strokeWidth={1.75} />
+        <Compass size={28} style={{ color: COLOR.ink }} strokeWidth={1.75} />
       </span>
       <h1 className="ecl-fade-up mt-5 text-3xl sm:text-4xl" style={{ ...FONT_DISPLAY, color: COLOR.text, animationDelay: '80ms' }}>
         ECL Referral Assistant
@@ -188,7 +188,7 @@ function StartScreen({ onStart, onReferNow }) {
       <button
         onClick={onReferNow}
         className="ecl-fade-up ecl-underline mt-4 text-sm font-medium"
-        style={{ color: COLOR.secondary, animationDelay: '280ms' }}
+        style={{ color: COLOR.inkSecondary, animationDelay: '280ms' }}
       >
         Refer a patient now
       </button>
@@ -314,7 +314,7 @@ function PathwayCard({ pathway, kind }) {
         {isPrimary ? 'Suggested pathway to discuss' : 'Also worth considering'}
       </p>
       <div className="mt-2 flex items-center gap-3">
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ background: COLOR.primaryTint, color: COLOR.primary }}>
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full" style={{ background: COLOR.primaryTint, color: COLOR.ink }}>
           <Icon name={pathway.icon} size={20} strokeWidth={1.75} />
         </span>
         <h2 className={isPrimary ? 'text-2xl sm:text-3xl' : 'text-xl'} style={{ ...FONT_DISPLAY, color: COLOR.text }}>

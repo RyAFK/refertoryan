@@ -3,6 +3,7 @@ import { createContext, useContext } from 'react';
 // ---------- theming (day / night) ----------
 
 export const DAY_COLORS = {
+  mode: 'day',
   bg: '#FFFFFF',
   recessed: '#F4F5F7',
   primary: '#0B2545',
@@ -17,10 +18,16 @@ export const DAY_COLORS = {
   action: '#B4780E',
   problem: '#B3261E',
   future: '#B7BFC7',
+  // Foreground-safe variants of primary/secondary — always legible on top of
+  // primaryTint/recessed/bg, unlike primary/secondary themselves which stay a
+  // fixed dark navy and are meant for solid brand-coloured surfaces.
+  ink: '#0B2545',
+  inkSecondary: '#1D4E75',
 };
 
 export const NIGHT_COLORS = {
   ...DAY_COLORS,
+  mode: 'night',
   bg: '#16233C',
   recessed: '#0A1424',
   primaryTint: 'rgba(29,78,117,0.35)',
@@ -29,6 +36,8 @@ export const NIGHT_COLORS = {
   textMuted: '#9FB0BE',
   border: 'rgba(255,255,255,0.14)',
   future: '#48525E',
+  ink: '#EDF1F5',
+  inkSecondary: '#9AC2EC',
 };
 
 export const ColorContext = createContext(DAY_COLORS);
