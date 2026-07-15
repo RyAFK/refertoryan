@@ -116,7 +116,7 @@ function OpeningStep({ module }) {
   );
 }
 
-function VideoStep({ module, onDiscuss, onRefer, onBookRyan, onContinue }) {
+function VideoStep({ module, onDiscuss, onRefer, onBookRyan }) {
   const COLOR = useColors();
   const [playing, setPlaying] = useState(false);
   return (
@@ -145,11 +145,8 @@ function VideoStep({ module, onDiscuss, onRefer, onBookRyan, onContinue }) {
 
       <div className="mt-8 rounded-2xl p-5" style={{ background: COLOR.recessed }}>
         <p className="text-sm font-medium" style={{ color: COLOR.text }}>Does this remind you of a patient you have recently seen?</p>
-        <div className="mt-4 flex flex-col gap-3">
+        <div className="mt-4">
           <ConversionRow discussLabel="Yes — Discuss This Case" referLabel="Yes — Refer a Patient" onDiscuss={onDiscuss} onRefer={onRefer} onBookRyan={onBookRyan} />
-          <button onClick={onContinue} className="ecl-underline text-sm font-medium" style={{ color: COLOR.textMuted }}>
-            Continue Learning
-          </button>
         </div>
       </div>
     </div>
@@ -602,7 +599,6 @@ export default function ModulePlayer({
               onDiscuss={() => onOpenDiscuss(discussContext)}
               onRefer={onReferPatient}
               onBookRyan={onOpenBookRyan}
-              onContinue={goNext}
             />
           )}
           {step === 'indicators' && (
@@ -630,7 +626,7 @@ export default function ModulePlayer({
         </div>
       </div>
 
-      {['opening', 'indicators', 'conversation', 'case-study'].includes(step) && (
+      {['opening', 'video', 'indicators', 'conversation', 'case-study'].includes(step) && (
         <div style={{ borderTop: `1px solid ${COLOR.border}`, background: COLOR.bg }}>
           <div className="mx-auto flex max-w-3xl items-center justify-between px-5 py-4 sm:px-6">
             <button onClick={goBack} className="ecl-btn flex items-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-medium" style={{ color: COLOR.textMuted }}>
@@ -642,7 +638,7 @@ export default function ModulePlayer({
           </div>
         </div>
       )}
-      {['video', 'would-you-refer', 'quiz'].includes(step) && (
+      {['would-you-refer', 'quiz'].includes(step) && (
         <div style={{ borderTop: `1px solid ${COLOR.border}`, background: COLOR.bg }}>
           <div className="mx-auto flex max-w-3xl items-center px-5 py-4 sm:px-6">
             <button onClick={goBack} className="ecl-btn flex items-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-medium" style={{ color: COLOR.textMuted }}>
