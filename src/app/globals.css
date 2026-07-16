@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+/* Keep a visible focus ring everywhere (WCAG 2.2 AA §27) - Tailwind's
+   default reset otherwise removes the outline and relies on utility classes
+   that individual ported pages may forget to add. */
+:focus-visible {
+  outline: 2px solid #1d4e75;
+  outline-offset: 2px;
+}
