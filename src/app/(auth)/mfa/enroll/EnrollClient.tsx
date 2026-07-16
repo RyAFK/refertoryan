@@ -16,6 +16,10 @@ export function EnrollClient() {
     startTransition(async () => {
       const result = await beginMfaEnrollmentAction();
       if (!result.ok) {
+        if (result.error === 'already_enrolled') {
+          router.push('/dashboard');
+          return;
+        }
         setError(result.error);
         return;
       }

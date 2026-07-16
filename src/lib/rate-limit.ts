@@ -86,12 +86,20 @@ export async function recordLoginAttempt(
   reason?: string
 ): Promise<void> {
   const supabase = createServiceRoleClient();
-  await supabase.from('login_attempts').insert({
+  const { error } = await supabase.from('login_attempts').insert({
     email_normalized: normalizeEmail(email),
     ip_address: ipAddress,
     outcome,
     reason: reason ?? null,
   });
+
+  if (error) {
+    // Deliberately does not throw - a failed insert here must not block
+    // the login flow itself - but a persistent failure silently disables
+    // the rate limiter (checkLoginRateLimit's failure counts never rise),
+    // so it must not be silent operationally either.
+    console.error('[rate-limit] failed to record login attempt', { outcome, error: error.message });
+  }
 }
 
 /** Pure helper, exported separately so it's unit-testable without a DB. */

@@ -1,19 +1,11 @@
 'use server';
 
-import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { checkLoginRateLimit, recordLoginAttempt } from '@/lib/rate-limit';
 import { writeAuditEvent } from '@/lib/audit';
-
-async function getClientIp(): Promise<string | null> {
-  const headerList = await headers();
-  return (
-    headerList.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-    headerList.get('x-real-ip') ||
-    null
-  );
-}
+import { getRequestContext } from '@/lib/request-context';
+import { sanitizeRedirectTarget } from '@/lib/safe-redirect';
 
 /**
  * Deliberately generic: every failure path (unknown email, wrong password,
@@ -26,9 +18,8 @@ const GENERIC_ERROR = 'invalid_credentials';
 export async function loginAction(formData: FormData): Promise<void> {
   const email = String(formData.get('email') ?? '').trim();
   const password = String(formData.get('password') ?? '');
-  const redirectTo = String(formData.get('redirectTo') ?? '/dashboard');
-  const ip = await getClientIp();
-  const userAgent = (await headers()).get('user-agent');
+  const redirectTo = sanitizeRedirectTarget(String(formData.get('redirectTo') ?? ''));
+  const { ipAddress: ip, userAgent } = await getRequestContext();
 
   if (!email || !password) {
     redirect(`/login?error=${GENERIC_ERROR}`);
@@ -41,6 +32,7 @@ export async function loginAction(formData: FormData): Promise<void> {
       entityType: 'auth',
       outcome: 'failure',
       ipAddress: ip,
+      userAgent,
       reason: rateLimit.reason,
     });
     // Intentionally still generic to the user, but the retry-after is a
@@ -65,11 +57,29 @@ export async function loginAction(formData: FormData): Promise<void> {
     redirect(`/login?error=${GENERIC_ERROR}`);
   }
 
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from('profiles')
-    .select('status, mfa_required, organisation_id, role')
+    .select('status, organisation_id, role')
     .eq('id', data.user.id)
     .maybeSingle();
+
+  if (profileError) {
+    // Fail closed: if we can't confirm the account is active, don't grant
+    // a session rather than silently letting a lookup failure through as
+    // if there were no problem.
+    await supabase.auth.signOut();
+    await recordLoginAttempt(email, ip, 'failure', 'profile_lookup_failed');
+    await writeAuditEvent({
+      eventType: 'login_failure',
+      entityType: 'auth',
+      actorId: data.user.id,
+      outcome: 'failure',
+      ipAddress: ip,
+      userAgent,
+      reason: 'profile_lookup_failed',
+    });
+    redirect(`/login?error=${GENERIC_ERROR}`);
+  }
 
   if (profile && profile.status !== 'active') {
     await supabase.auth.signOut();
@@ -80,6 +90,7 @@ export async function loginAction(formData: FormData): Promise<void> {
       actorId: data.user.id,
       outcome: 'failure',
       ipAddress: ip,
+      userAgent,
       reason: 'account_not_active',
     });
     redirect('/unauthorized?reason=account_not_active');
@@ -97,19 +108,10 @@ export async function loginAction(formData: FormData): Promise<void> {
     userAgent,
   });
 
-  const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-
-  if (aal?.nextLevel === 'aal2' && aal.currentLevel !== 'aal2') {
-    redirect(`/mfa/verify?redirectTo=${encodeURIComponent(redirectTo)}`);
-  }
-
-  if (profile?.mfa_required) {
-    const { data: factors } = await supabase.auth.mfa.listFactors();
-    const hasVerifiedFactor = factors?.totp?.some((f) => f.status === 'verified');
-    if (!hasVerifiedFactor) {
-      redirect('/mfa/enroll');
-    }
-  }
-
+  // MFA step-up and mandatory-enrollment routing is handled centrally by
+  // src/proxy.ts on the very next request - it re-derives the same
+  // assurance-level/mfa_required state this function would otherwise have
+  // to duplicate, and (unlike a one-time check here) keeps enforcing it on
+  // every subsequent request too, not just immediately after login.
   redirect(redirectTo);
 }

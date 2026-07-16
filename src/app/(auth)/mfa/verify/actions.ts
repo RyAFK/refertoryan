@@ -1,22 +1,21 @@
 'use server';
 
-import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { writeAuditEvent } from '@/lib/audit';
+import { getRequestContext } from '@/lib/request-context';
+import { sanitizeRedirectTarget } from '@/lib/safe-redirect';
 
 export async function verifyMfaAction(formData: FormData): Promise<void> {
   const factorId = String(formData.get('factorId') ?? '');
   const code = String(formData.get('code') ?? '').trim();
-  const redirectTo = String(formData.get('redirectTo') ?? '/dashboard');
+  const redirectTo = sanitizeRedirectTarget(String(formData.get('redirectTo') ?? ''));
 
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const headerList = await headers();
-  const ipAddress = headerList.get('x-forwarded-for');
-  const userAgent = headerList.get('user-agent');
+  const { ipAddress, userAgent } = await getRequestContext();
 
   if (!factorId || !code || !user) {
     redirect('/mfa/verify?error=invalid_code');

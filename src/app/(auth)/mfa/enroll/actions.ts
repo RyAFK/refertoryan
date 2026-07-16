@@ -1,8 +1,8 @@
 'use server';
 
-import { headers } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
 import { writeAuditEvent } from '@/lib/audit';
+import { getRequestContext } from '@/lib/request-context';
 
 export interface BeginEnrollmentResult {
   factorId: string;
@@ -16,6 +16,19 @@ export async function beginMfaEnrollmentAction(): Promise<{ ok: true; data: Begi
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return { ok: false, error: 'not_authenticated' };
+
+  // Defense in depth: src/proxy.ts already keeps a session that has a
+  // verified factor away from this page, but that's a routing decision,
+  // not an authorisation check - this endpoint must independently refuse
+  // to let an aal1-only session (someone who has only proven knowledge of
+  // the password) register a brand-new factor of its own choosing, which
+  // would otherwise let an attacker self-enroll a device and reach aal2
+  // without ever possessing the account's real second factor.
+  const { data: existingFactors } = await supabase.auth.mfa.listFactors();
+  const alreadyEnrolled = existingFactors?.totp?.some((f) => f.status === 'verified');
+  if (alreadyEnrolled) {
+    return { ok: false, error: 'already_enrolled' };
+  }
 
   const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp' });
   if (error || !data) {
@@ -42,9 +55,7 @@ export async function completeMfaEnrollmentAction(
   } = await supabase.auth.getUser();
   if (!user) return { ok: false, error: 'not_authenticated' };
 
-  const headerList = await headers();
-  const ipAddress = headerList.get('x-forwarded-for');
-  const userAgent = headerList.get('user-agent');
+  const { ipAddress, userAgent } = await getRequestContext();
 
   const { data: challenge, error: challengeError } = await supabase.auth.mfa.challenge({ factorId });
   if (challengeError || !challenge) {

@@ -1,9 +1,9 @@
 'use server';
 
-import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { writeAuditEvent } from '@/lib/audit';
+import { getRequestContext } from '@/lib/request-context';
 
 export async function signOutAction(): Promise<void> {
   const supabase = await createClient();
@@ -14,14 +14,14 @@ export async function signOutAction(): Promise<void> {
   await supabase.auth.signOut();
 
   if (user) {
-    const headerList = await headers();
+    const { ipAddress, userAgent } = await getRequestContext();
     await writeAuditEvent({
       eventType: 'logout',
       entityType: 'auth',
       actorId: user.id,
       outcome: 'success',
-      ipAddress: headerList.get('x-forwarded-for'),
-      userAgent: headerList.get('user-agent'),
+      ipAddress,
+      userAgent,
     });
   }
 
