@@ -4,9 +4,10 @@ const REASON_MESSAGES: Record<string, string> = {
   no_practice_access: 'You do not have access to that practice’s records.',
 };
 
-export default function UnauthorizedPage({ searchParams }: { searchParams: { reason?: string } }) {
-  const message = searchParams.reason
-    ? REASON_MESSAGES[searchParams.reason] ?? 'You do not have access to this page.'
+export default async function UnauthorizedPage({ searchParams }: { searchParams: Promise<{ reason?: string }> }) {
+  const params = await searchParams;
+  const message = params.reason
+    ? REASON_MESSAGES[params.reason] ?? 'You do not have access to this page.'
     : 'You do not have access to this page.';
 
   return (

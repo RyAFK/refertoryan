@@ -9,8 +9,9 @@ const ERROR_MESSAGES: Record<string, string> = {
 export default async function MfaVerifyPage({
   searchParams,
 }: {
-  searchParams: { error?: string; redirectTo?: string };
+  searchParams: Promise<{ error?: string; redirectTo?: string }>;
 }) {
+  const params = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -27,7 +28,7 @@ export default async function MfaVerifyPage({
     redirect('/mfa/enroll');
   }
 
-  const errorMessage = searchParams.error ? ERROR_MESSAGES[searchParams.error] ?? ERROR_MESSAGES.invalid_code : null;
+  const errorMessage = params.error ? ERROR_MESSAGES[params.error] ?? ERROR_MESSAGES.invalid_code : null;
 
   return (
     <main className="mx-auto flex min-h-[80vh] max-w-sm flex-col justify-center gap-6 px-4">
@@ -46,7 +47,7 @@ export default async function MfaVerifyPage({
 
       <form action={verifyMfaAction} className="flex flex-col gap-4">
         <input type="hidden" name="factorId" value={factor.id} />
-        <input type="hidden" name="redirectTo" value={searchParams.redirectTo ?? '/dashboard'} />
+        <input type="hidden" name="redirectTo" value={params.redirectTo ?? '/dashboard'} />
         <div>
           <label htmlFor="code" className="mb-1 block text-sm font-medium text-slate-700">
             Authentication code

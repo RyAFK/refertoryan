@@ -6,12 +6,13 @@ const ERROR_MESSAGES: Record<string, string> = {
   rate_limited: 'Too many sign-in attempts. Please wait before trying again.',
 };
 
-export default function LoginPage({
+export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: { error?: string; retryAfter?: string; redirectTo?: string };
+  searchParams: Promise<{ error?: string; retryAfter?: string; redirectTo?: string }>;
 }) {
-  const errorMessage = searchParams.error ? ERROR_MESSAGES[searchParams.error] ?? ERROR_MESSAGES.invalid_credentials : null;
+  const params = await searchParams;
+  const errorMessage = params.error ? ERROR_MESSAGES[params.error] ?? ERROR_MESSAGES.invalid_credentials : null;
 
   return (
     <main className="mx-auto flex min-h-[80vh] max-w-sm flex-col justify-center gap-6 px-4">
@@ -26,12 +27,12 @@ export default function LoginPage({
       {errorMessage && (
         <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
           {errorMessage}
-          {searchParams.retryAfter ? ` Try again in about ${Math.ceil(Number(searchParams.retryAfter) / 60)} minute(s).` : ''}
+          {params.retryAfter ? ` Try again in about ${Math.ceil(Number(params.retryAfter) / 60)} minute(s).` : ''}
         </p>
       )}
 
       <form action={loginAction} className="flex flex-col gap-4">
-        <input type="hidden" name="redirectTo" value={searchParams.redirectTo ?? '/dashboard'} />
+        <input type="hidden" name="redirectTo" value={params.redirectTo ?? '/dashboard'} />
         <div>
           <label htmlFor="email" className="mb-1 block text-sm font-medium text-slate-700">
             Email address

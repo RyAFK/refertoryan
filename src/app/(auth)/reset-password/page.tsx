@@ -1,7 +1,9 @@
 import { requestPasswordResetAction } from './actions';
 
-export default function ResetPasswordPage({ searchParams }: { searchParams: { requested?: string } }) {
-  if (searchParams.requested) {
+export default async function ResetPasswordPage({ searchParams }: { searchParams: Promise<{ requested?: string }> }) {
+  const params = await searchParams;
+
+  if (params.requested) {
     return (
       <main className="mx-auto flex min-h-[80vh] max-w-sm flex-col justify-center gap-4 px-4 text-center">
         <h1 className="text-2xl font-semibold text-slate-900">Check your email</h1>
