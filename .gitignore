@@ -1,8 +1,6 @@
 node_modules
 dist
 dist-ssr
-.next
-*.tsbuildinfo
 *.local
 
 .claude/settings.local.json
