@@ -77,7 +77,10 @@ export function EnrollClient() {
         role="img"
         aria-label="MFA setup QR code"
       />
-      <p className="break-all rounded-lg bg-slate-100 px-3 py-2 text-center font-mono text-xs text-slate-700">
+      <p
+        data-testid="mfa-secret"
+        className="break-all rounded-lg bg-slate-100 px-3 py-2 text-center font-mono text-xs text-slate-700"
+      >
         {enrollment.secret}
       </p>
       {error && (
